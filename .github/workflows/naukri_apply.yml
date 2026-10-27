@@ -1,0 +1,112 @@
+name: Naukri Job Apply Bot (Twice Daily)
+
+on:
+  schedule:
+    # Runs twice every day:
+    # 1) 09:30 AM IST = 04:00 UTC ('0 4 * * *')
+    # 2) 05:30 PM IST = 12:00 UTC ('0 12 * * *')
+    - cron: '0 4,12 * * *'
+  workflow_dispatch: # Allows manual trigger anytime from GitHub Actions tab or via API
+
+env:
+  TZ: 'Asia/Kolkata'
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  apply-jobs:
+    name: Run Twice-Daily Job Applications
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Verify Google Chrome
+        run: |
+          google-chrome --version
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Prepare Resume PDF
+        run: |
+          if [ -n "${{ secrets.RESUME_BASE64 }}" ]; then
+            echo "${{ secrets.RESUME_BASE64 }}" | base64 -d > resume.pdf
+          fi
+          if [ -f "resume.pdf" ]; then
+            echo "RESUME_PATH=$(pwd)/resume.pdf" >> $GITHUB_ENV
+          fi
+
+      - name: Execute Naukri Daily Apply Bot
+        env:
+          HEADLESS: "True"
+          BROWSER: "chrome"
+
+          # Authentication & Credentials (stored securely in GitHub Secrets)
+          NAUKRI_EMAIL: ${{ secrets.NAUKRI_EMAIL }}
+          NAUKRI_PASSWORD: ${{ secrets.NAUKRI_PASSWORD }}
+          NAUKRI_COOKIES: ${{ secrets.NAUKRI_COOKIES }}
+
+          # Job Target & Search Settings (Unlimited Free Runners on Public Repo)
+          JOBS_PER_RUN: ${{ vars.JOBS_PER_RUN || '50' }}
+          MAX_RUN_MINUTES: ${{ vars.MAX_RUN_MINUTES || '60' }}
+          MAX_PAGES_PER_QUERY: ${{ vars.MAX_PAGES_PER_QUERY || '10' }}
+          AGE_WINDOWS: ${{ vars.AGE_WINDOWS || '1,3,7' }}
+          SEARCH_QUERIES: ${{ vars.SEARCH_QUERIES || 'Python Automation Engineer, Python, Python Automation, Python SDET, Selenium Automation Engineer, Selenium, Selenium Python, API Testing, API Automation, API Automation Engineer' }}
+          LOCATION: ${{ vars.LOCATION || '' }}
+          ANYWHERE_FALLBACK: "True"
+          EXPERIENCE_YEARS: ${{ vars.EXPERIENCE_YEARS || '6' }}
+          NOTICE_PERIOD: ${{ vars.NOTICE_PERIOD || '30' }}
+          CURRENT_CTC: ${{ vars.CURRENT_CTC || '30' }}
+          EXPECTED_CTC: ${{ vars.EXPECTED_CTC || '33' }}
+
+          # Candidate Details for Questionnaire Auto-Fill (from Secrets/Vars)
+          PAN: ${{ secrets.PAN || vars.PAN }}
+          CANDIDATE_NAME: ${{ secrets.CANDIDATE_NAME || vars.CANDIDATE_NAME }}
+          CANDIDATE_FIRST_NAME: ${{ secrets.CANDIDATE_FIRST_NAME || vars.CANDIDATE_FIRST_NAME }}
+          CANDIDATE_LAST_NAME: ${{ secrets.CANDIDATE_LAST_NAME || vars.CANDIDATE_LAST_NAME }}
+          CANDIDATE_PHONE: ${{ secrets.CANDIDATE_PHONE || vars.CANDIDATE_PHONE }}
+          CANDIDATE_EMAIL: ${{ secrets.CANDIDATE_EMAIL || vars.CANDIDATE_EMAIL }}
+          CURRENT_COMPANY: ${{ secrets.CURRENT_COMPANY || vars.CURRENT_COMPANY }}
+          CURRENT_DESIGNATION: ${{ secrets.CURRENT_DESIGNATION || vars.CURRENT_DESIGNATION }}
+          PREVIOUS_COMPANY: ${{ secrets.PREVIOUS_COMPANY || vars.PREVIOUS_COMPANY }}
+          PREVIOUS_DESIGNATION: ${{ secrets.PREVIOUS_DESIGNATION || vars.PREVIOUS_DESIGNATION }}
+          COLLEGE: ${{ secrets.COLLEGE || vars.COLLEGE }}
+          LINKEDIN_URL: ${{ secrets.LINKEDIN_URL || vars.LINKEDIN_URL }}
+        run: |
+          python daily_apply.py
+
+      - name: Upload Logs & Screenshots Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: naukri-apply-logs-and-screenshots
+          path: |
+            logs/
+            screenshots/
+            applied_jobs.json
+          retention-days: 7
+
+      - name: Auto-Clean Old Workflow Runs
+        if: always()
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUNS_TO_DELETE=$(gh run list --repo "${{ github.repository }}" --limit 100 --json databaseId --jq '.[5:][].databaseId')
+          for id in $RUNS_TO_DELETE; do
+            echo "Deleting old run: $id"
+            gh run delete "$id" --repo "${{ github.repository }}" || true
+          done

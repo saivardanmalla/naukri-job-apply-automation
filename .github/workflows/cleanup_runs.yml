@@ -1,0 +1,34 @@
+name: Clean Old Workflow Runs Daily
+
+on:
+  schedule:
+    # Runs daily at 12:00 AM IST (18:30 UTC)
+    - cron: '30 18 * * *'
+  workflow_dispatch: # Allows instant manual cleanup anytime from Actions tab
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  cleanup-workflow-runs:
+    name: Purge Old Workflow Runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Old Workflow Runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Checking workflow runs in repository ${{ github.repository }}..."
+          RUNS_TO_DELETE=$(gh run list --repo "${{ github.repository }}" --limit 100 --json databaseId --jq '.[3:][].databaseId')
+          
+          if [ -z "$RUNS_TO_DELETE" ]; then
+            echo "No older runs to delete. Everything is already clean!"
+          else
+            echo "Found old runs. Deleting..."
+            for id in $RUNS_TO_DELETE; do
+              echo "Deleting workflow run: $id"
+              gh run delete "$id" --repo "${{ github.repository }}" || true
+            done
+            echo "Cleanup finished successfully!"
+          fi

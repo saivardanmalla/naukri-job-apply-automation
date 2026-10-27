@@ -1,0 +1,30 @@
+# Environment variables and credentials
+.env
+.env.local
+cookies.json
+*.pdf
+
+# Application state & logs
+applied_jobs*.json
+naukri_job_apply_automation/applied_jobs.json
+*.tmp
+*.bak
+*.log
+*.log.old
+logs/
+screenshots/
+scratch/
+
+# Browser profiles and cache directories
+edge_naukri_profile/
+chrome_naukri_profile/
+chrome_profile_2/
+Crashpad/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Large videos or media files
+*.mp4
+*.avi
+*.mkv
