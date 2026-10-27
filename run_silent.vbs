@@ -1,3 +1,5 @@
-Set WshShell = CreateObject("WScript.Shell")
-WshShell.Run chr(34) & Replace(WScript.ScriptFullName, "run_silent.vbs", "run_scheduled.bat") & chr(34), 0
-Set WshShell = Nothing
+' ==============================================================================
+' Local execution is PERMANENTLY DISABLED.
+' Automation runs 24/7 exclusively in the cloud on GitHub Actions.
+' ==============================================================================
+WScript.Quit 0
