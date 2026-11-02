@@ -55,7 +55,7 @@ BROWSER = _env("BROWSER", "edge" if sys.platform == "win32" else "chrome").lower
 NAUKRI_COOKIES = _env("NAUKRI_COOKIES")
 COOKIES_FILE = BASE_DIR / "cookies.json"
 
-JOBS_PER_RUN = int(_env("JOBS_PER_RUN") or _env("DAILY_TARGET") or _env("MAX_JOBS_TO_APPLY") or "50")
+JOBS_PER_RUN = int(_env("JOBS_PER_RUN") or _env("DAILY_TARGET") or _env("MAX_JOBS_TO_APPLY") or "65")
 if len(sys.argv) > 1 and sys.argv[1].isdigit():
     JOBS_PER_RUN = int(sys.argv[1])
 UNLIMITED = _env("UNLIMITED", "False").lower() in ("true", "1", "yes") or JOBS_PER_RUN <= 0

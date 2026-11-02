@@ -13,7 +13,7 @@ Write-Host ""
 
 if ($Interactive) {
     # 1. Ask how many jobs to apply
-    $defaultJobs = 50
+    $defaultJobs = 65
     $jobsInput = Read-Host "How many jobs do you want to apply to? [Default: $defaultJobs]"
     if ([string]::IsNullOrWhiteSpace($jobsInput) -or -not ($jobsInput -as [int])) {
         $targetJobs = $defaultJobs

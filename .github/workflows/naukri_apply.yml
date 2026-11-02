@@ -60,7 +60,7 @@ jobs:
           NAUKRI_COOKIES: ${{ secrets.NAUKRI_COOKIES }}
 
           # Job Target & Search Settings (Unlimited Free Runners on Public Repo)
-          JOBS_PER_RUN: ${{ vars.JOBS_PER_RUN || '50' }}
+          JOBS_PER_RUN: ${{ vars.JOBS_PER_RUN || '65' }}
           MAX_RUN_MINUTES: ${{ vars.MAX_RUN_MINUTES || '60' }}
           MAX_PAGES_PER_QUERY: ${{ vars.MAX_PAGES_PER_QUERY || '10' }}
           AGE_WINDOWS: ${{ vars.AGE_WINDOWS || '1,3,7' }}
