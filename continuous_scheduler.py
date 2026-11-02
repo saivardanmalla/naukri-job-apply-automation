@@ -1,6 +1,6 @@
 """Continuous Background Scheduler for Naukri Job Apply Bot.
 
-Runs automatically twice every day (09:30 AM and 05:30 PM IST)
+Runs automatically twice every day (09:00 AM and 04:00 PM IST)
 without any manual prompts or interaction.
 """
 import gc
@@ -28,7 +28,7 @@ logging.basicConfig(
 log = logging.getLogger("Scheduler")
 
 # Scheduled times (24-hour format HH:MM)
-SCHEDULED_TIMES = ["09:30", "17:30"]
+SCHEDULED_TIMES = ["09:00", "16:00"]
 
 
 def run_apply_job():
