@@ -690,10 +690,13 @@ def get_driver():
             opts.add_argument("--window-size=1842,956")
 
         try:
-            from webdriver_manager.chrome import ChromeDriverManager
-            driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=opts)
-        except Exception:
             driver = webdriver.Chrome(options=opts)
+        except Exception:
+            try:
+                from webdriver_manager.chrome import ChromeDriverManager
+                driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=opts)
+            except Exception:
+                driver = webdriver.Chrome(options=opts)
     else:
         profile_dir = BASE_DIR / "edge_naukri_profile"
         profile_dir.mkdir(parents=True, exist_ok=True)
@@ -713,8 +716,7 @@ def get_driver():
             opts.add_argument("--window-size=1842,956")
 
         try:
-            from webdriver_manager.microsoft import EdgeChromiumDriverManager
-            driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=opts)
+            driver = webdriver.Edge(options=opts)
         except Exception as e:
             if sys.platform == "win32" and ("Chrome instance exited" in str(e) or "session not created" in str(e).lower()):
                 log.warning("Edge profile was locked by an existing process. Closing stale Edge processes and retrying...")
@@ -723,12 +725,16 @@ def get_driver():
                 subprocess.run(["taskkill", "/F", "/IM", "msedge.exe"], capture_output=True)
                 time.sleep(2)
                 try:
+                    driver = webdriver.Edge(options=opts)
+                except Exception:
+                    from webdriver_manager.microsoft import EdgeChromiumDriverManager
+                    driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=opts)
+            else:
+                try:
                     from webdriver_manager.microsoft import EdgeChromiumDriverManager
                     driver = webdriver.Edge(service=EdgeService(EdgeChromiumDriverManager().install()), options=opts)
                 except Exception:
-                    driver = webdriver.Edge(options=opts)
-            else:
-                driver = webdriver.Edge(options=opts)
+                    raise e
 
     driver.set_page_load_timeout(35)
     driver.set_script_timeout(25)
