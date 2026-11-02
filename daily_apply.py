@@ -59,7 +59,7 @@ JOBS_PER_RUN = int(_env("JOBS_PER_RUN") or _env("DAILY_TARGET") or _env("MAX_JOB
 if len(sys.argv) > 1 and sys.argv[1].isdigit():
     JOBS_PER_RUN = int(sys.argv[1])
 UNLIMITED = _env("UNLIMITED", "False").lower() in ("true", "1", "yes") or JOBS_PER_RUN <= 0
-QUERIES = [q.strip() for q in (_env("SEARCH_QUERIES") or _env("SEARCH_QUERY") or "Python Automation Engineer, Python, Python Automation, Python SDET, Selenium Automation Engineer, Selenium, Selenium Python, API Testing, API Automation, API Automation Engineer").split(",") if q.strip()]
+QUERIES = [q.strip() for q in (_env("SEARCH_QUERIES") or _env("SEARCH_QUERY") or "Python Automation Engineer, Python, Python Automation, Python SDET, Selenium Automation Engineer, Selenium, Selenium Python, API Testing, API Automation, API Automation Engineer, QA").split(",") if q.strip()]
 LOCATION = _env("LOCATION", "")                 # empty = anywhere in India
 for _i, _arg in enumerate(sys.argv):
     if _arg == "--location" and _i + 1 < len(sys.argv):

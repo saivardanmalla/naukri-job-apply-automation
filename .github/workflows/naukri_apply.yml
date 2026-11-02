@@ -64,7 +64,7 @@ jobs:
           MAX_RUN_MINUTES: ${{ vars.MAX_RUN_MINUTES || '60' }}
           MAX_PAGES_PER_QUERY: ${{ vars.MAX_PAGES_PER_QUERY || '10' }}
           AGE_WINDOWS: ${{ vars.AGE_WINDOWS || '1,3,7' }}
-          SEARCH_QUERIES: ${{ vars.SEARCH_QUERIES || 'Python Automation Engineer, Python, Python Automation, Python SDET, Selenium Automation Engineer, Selenium, Selenium Python, API Testing, API Automation, API Automation Engineer' }}
+          SEARCH_QUERIES: ${{ vars.SEARCH_QUERIES || 'Python Automation Engineer, Python, Python Automation, Python SDET, Selenium Automation Engineer, Selenium, Selenium Python, API Testing, API Automation, API Automation Engineer, QA' }}
           LOCATION: ${{ vars.LOCATION || '' }}
           ANYWHERE_FALLBACK: "True"
           EXPERIENCE_YEARS: ${{ vars.EXPERIENCE_YEARS || '6' }}
