@@ -14,7 +14,7 @@ Write-Host "==========================================================" -Foregro
 Write-Host "Task Name   : $taskName" -ForegroundColor White
 Write-Host "Directory   : $scriptDir" -ForegroundColor White
 Write-Host "Schedule    : Twice Daily (09:00 AM & 04:00 PM IST)" -ForegroundColor White
-Write-Host "Target      : 100 Jobs / run (Headless Mode)" -ForegroundColor White
+Write-Host "Target      : 200 Jobs / run (Headless Mode)" -ForegroundColor White
 Write-Host "Mode        : Fully Automated (Zero Manual Interaction)" -ForegroundColor White
 Write-Host ""
 
@@ -41,7 +41,7 @@ $settings = New-ScheduledTaskSettingsSet `
     -DontStopIfGoingOnBatteries `
     -StartWhenAvailable `
     -MultipleInstances IgnoreNew `
-    -ExecutionTimeLimit (New-TimeSpan -Hours 2)
+    -ExecutionTimeLimit (New-TimeSpan -Hours 5)
 
 # Register or replace the task
 Register-ScheduledTask `
@@ -49,7 +49,7 @@ Register-ScheduledTask `
     -Action $action `
     -Trigger @($triggerMorning, $triggerEvening) `
     -Settings $settings `
-    -Description "Automated Naukri Job Apply Bot - runs twice daily (9 AM & 4 PM) applying 100 jobs in headless mode" `
+    -Description "Automated Naukri Job Apply Bot - runs twice daily (9 AM & 4 PM) applying 200 jobs in headless mode" `
     -Force | Out-Null
 
 Write-Host "SUCCESS: Task '$taskName' successfully registered!" -ForegroundColor Green
@@ -60,7 +60,7 @@ Write-Host "  [2] Evening Run : 04:00 PM every day" -ForegroundColor White
 Write-Host ""
 Write-Host "Features Active:" -ForegroundColor Cyan
 Write-Host "  [OK] Headless Execution (runs quietly in background)" -ForegroundColor Gray
-Write-Host "  [OK] 100 Jobs target per run" -ForegroundColor Gray
+Write-Host "  [OK] 200 Jobs target per run" -ForegroundColor Gray
 Write-Host "  [OK] Battery support (runs even if laptop is on battery)" -ForegroundColor Gray
 Write-Host "  [OK] Missed run catch-up (runs upon boot/wake if time was missed)" -ForegroundColor Gray
 Write-Host "  [OK] Logs stored in logs\scheduled_task.log and logs\daily_apply.log" -ForegroundColor Gray

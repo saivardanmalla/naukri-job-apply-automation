@@ -21,7 +21,7 @@ rem Pre-run process cleanup: terminate orphaned WebDriver daemons
 taskkill /F /IM msedgedriver.exe >nul 2>&1
 taskkill /F /IM chromedriver.exe >nul 2>&1
 
-echo [%DATE% %TIME%] Starting scheduled Naukri Job Apply Bot run (100 jobs target)... >> "logs\scheduled_task.log" 2>&1
+echo [%DATE% %TIME%] Starting scheduled Naukri Job Apply Bot run (200 jobs target)... >> "logs\scheduled_task.log" 2>&1
 
 rem Detect Python executable
 set "PYTHON_EXE=python"
